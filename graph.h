@@ -6,18 +6,17 @@
 #include "neuron.h"
 #include <vector>
 
-using namespace std;
-
 class Graph {
-	list<Neuron *> neurons;
-	list<Neuron *> inputNeurons;
-	list<Neuron *> outputNeurons;
-	vector<Neuron *> neuronPtr;
+public:
+	std::list<Neuron *> neurons;
+	std::list<Neuron *> inputNeurons;
+	std::list<Neuron *> outputNeurons;
+	std::vector<Neuron *> neuronPtr;
 	long max_iter;
 	int index;
-public:
+
 	Graph(long max_i=10);
-	bool run(double inputs[], list<std::vector<double>> &outputMatrix);
+	bool run(double inputs[], std::list<std::vector<double>> &outputMatrix);
 	void add(int x, int y, bool input, bool output);
 	void link(int sender, int receiver);
 	void print();

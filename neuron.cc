@@ -3,7 +3,7 @@
 #include <iostream>
 #include "math.h"
 
-std::default_random_engine generator;
+std::default_random_engine generator(time(NULL));
 std::uniform_real_distribution<double> distribution(-1.0, 1.0);
 
 // Constructor for Neuron
@@ -20,24 +20,24 @@ Neuron::Neuron(int x, int y, int i, bool input, bool output) {
 }
 
 // Prints full neuron details
-void Neuron::print(int sep) {
-	for(int i = 0; i < sep; ++i) {
-		std::cout << "--";
-	}
+void Neuron::print() {
+	std::cout << "------------------------";
 	std::cout << endl;
 
 	std::cout << "Neuron ";
 	std::cout << index;
 	std::cout << ":" << endl;
 
-	std::cout << "\tThreshold: ";
+	std::cout << "\tThreshold    : ";
 	std::cout << thres << endl;
-	std::cout << "\tposition X: ";
+	std::cout << "\tposition X   : ";
 	std::cout << posX << endl;
-	std::cout << "\tposition Y: ";
+	std::cout << "\tposition Y   : ";
 	std::cout << posY << endl;
-	std::cout << "\tinputNeuron?: ";
+	std::cout << "\tinputNeuron? : ";
 	std::cout << inputNeuron << endl;
+	std::cout << "\toutputNeuron?: ";
+	std::cout << outputNeuron << endl;
 
 	std::cout << "\tWeights:" << endl;
 	int len = weights.size();
@@ -47,7 +47,7 @@ void Neuron::print(int sep) {
 		std::cout << i;
 		std::cout << ": ";
 		std::cout << (*iter) << endl;
-		std::advance(iter, 1);
+		++iter;
 	}
 
 	std::cout << "\tBias: ";
@@ -60,7 +60,7 @@ void Neuron::print(int sep) {
 		std::cout << i;
 		std::cout << ": Neuron ";
 		std::cout << (*iter_con)->index << endl;
-		std::advance(iter, 1);
+		++iter;
 	}
 }
 
@@ -75,20 +75,26 @@ double Neuron::forward(double input) {
 	double a = sigmoid(thres);
 	if(a < 0.5 && !inputNeuron){
 		return 0;
-	} else if (outputNeuron) {
-		thres = 0;
-		return a;
 	} else {
-		int len = weights.size();
-		if (inputNeuron) a = input;
-		std::list<Neuron *>::iterator iter = connections.begin();
-		std::list<double>::iterator iterWeight = weights.begin();
-		for(int i = 0; i < len; ++i) {
-			(*iter)->thres += a * (*iterWeight);
-			std::advance(iter, 1);
-			std::advance(iterWeight, 1);
-		}
 		thres = 0;
+		if(connections.empty()) return a;
+		int len = weights.size();
+
+		std::list<Neuron *>::iterator iter = connections.begin();
+		
+		if(inputNeuron) {
+			for(int i = 0; i < len; ++i) {
+				(*iter)->thres += input;
+				++iter;
+			}
+		} else {
+			std::list<double>::iterator iterWeight = weights.begin();
+			for(int i = 0; i < len; ++i) {
+				(*iter)->thres += a * (*iterWeight);
+				++iter;
+				++iterWeight;
+			}
+		}
 		return a;
 	}
 }

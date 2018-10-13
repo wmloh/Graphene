@@ -1,15 +1,17 @@
 #include "graph.h"
 #include <iostream>
 
+// Constructor for Graph
 Graph::Graph(long max_i) {
 	std::list<Neuron *> neurons;
-	list<Neuron *> inputNeurons;
-	list<Neuron *> outputNeurons;
-	vector<Neuron *> neuronPtr;
+	std::list<Neuron *> inputNeurons;
+	std::list<Neuron *> outputNeurons;
+	std::vector<Neuron *> neuronPtr;
 	max_iter = max_i;
 	index = 0;
 }
 
+// Forward propagates all neurons in the graph
 bool Graph::run(double inputs[], std::list<std::vector<double>> &outputMatrix) {
 	std::list<Neuron *>::iterator iterIn = inputNeurons.begin();
 	std::list<Neuron *>::iterator iter = neurons.begin();
@@ -21,26 +23,30 @@ bool Graph::run(double inputs[], std::list<std::vector<double>> &outputMatrix) {
 
 	for(int timestep=0; timestep < max_iter; ++timestep) {
 		
-		for(int i = 0; i < ilen; ++i) {
-			(*iterIn)->forward(inputs[i]);
-			//std::advance(iterIn, 1);
+		(*iterIn)->forward(inputs[0]);
+		for(int i = 0; i < ilen-1; ++i) {
+			++iterIn;
+			(*iterIn)->forward(inputs[i+1]);
 		}
 		
-		for(int i = 0; i < nlen; ++i) {
+		(*iter)->forward();
+		for(int i = 0; i < nlen-1; ++i) {
+			++iter;
 			(*iter)->forward();
-			//std::advance(iter, 1);
 		}
 		
 		std::vector<double> v;
-		for(int i = 0; i < olen; ++i) {
+		v.push_back((*iterOut)->forward());
+		for(int i = 0; i < olen-1; ++i) {
+			++iterOut;
 			v.push_back((*iterOut)->forward());
-			std::advance(iterOut, 1);
 		}
 		outputMatrix.push_back(v);
 	}
 	return true;
 }
 
+// Adds a Neuron into Graph
 void Graph::add(int x, int y, bool input, bool output) {
 	Neuron *n = new Neuron(x, y, index, input, output);
 	neuronPtr.push_back(n);
@@ -54,10 +60,12 @@ void Graph::add(int x, int y, bool input, bool output) {
 	++index;
 }
 
+// Links two Neuron signal transmission
 void Graph::link(int sender, int receiver) {
 	neuronPtr[sender]->link(neuronPtr[receiver]);
 }
 
+// Prints full details of all Neurons in the Graph
 void Graph::print() {
 	int len = neuronPtr.size();
 	for(int i = 0; i < len; ++i) {

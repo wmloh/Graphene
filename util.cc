@@ -8,6 +8,7 @@ void printOutput(std::list<std::vector<double>> &v) {
 	for(int i = 0; i < len; ++i) {
 		for(int j = 0; j < vlen; ++j) {
 			std::cout << (*iter)[j];
+			std::cout << " ";
 		}
 		std::cout << std::endl;
 	}
