@@ -1,14 +1,28 @@
-#include <iostream>
 #include "graph.h"
+#include <cmath>
+#include "util.h"
 
-using namespace std;
-
-const double alpha = 0.01;
+const double alpha = 100;
 
 int main() {
-	Neuron n1{0,0,0,true};
-	n1.print();
-	Neuron n2{20,35, 1, true};
-	n2.print();
-	
+	srand(time(NULL));
+
+	Graph g;
+	g.add(0, 0, true, false);
+	g.add(20, 35, false, false);
+	g.add(50, 50, false, true);
+
+	std::cout << "1" << endl;
+
+	std::list<std::vector<double>> v;
+	double input[1] = {5};
+
+	std::cout << "2" << endl;
+
+	g.run(input, v);
+
+	std::cout << "3" << endl;
+
+	printOutput(v);
+	g.print();
 }

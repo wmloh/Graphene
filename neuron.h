@@ -15,12 +15,12 @@ class Neuron {
 	int posX;
 	int posY;
 	bool inputNeuron;
+	bool outputNeuron;
 public:
-	Neuron(int x, int y, int i, bool input);
+	Neuron(int x, int y, int i, bool input, bool output);
 	void print(int sep=12);
 	void link(Neuron *n);
-	void receiveSignal(double x);
-	double forward();
+	double forward(double input=0);
 	void backward(double error, double activation, double alpha);
 };
 
