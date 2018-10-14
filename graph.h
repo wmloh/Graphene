@@ -17,7 +17,7 @@ public:
 
 	Graph(long max_i=10);
 	bool run(double inputs[], std::list<std::vector<double>> &outputMatrix);
-	void add(int x, int y, bool input, bool output);
+	int add(int x, int y, bool input, bool output);
 	void link(int sender, int receiver);
 	void print();
 };

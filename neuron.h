@@ -4,13 +4,11 @@
 #include <iostream>
 #include <list>
 
-using namespace std;
-
 class Neuron {
 public:
 	int index;
-	list<double> weights;
-	list<Neuron *> connections;
+	std::list<double> weights;
+	std::list<Neuron *> connections;
 	double bias;
 	double thres;
 	int posX;

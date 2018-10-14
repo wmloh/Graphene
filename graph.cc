@@ -22,12 +22,16 @@ bool Graph::run(double inputs[], std::list<std::vector<double>> &outputMatrix) {
 	int olen = outputNeurons.size();
 
 	for(int timestep=0; timestep < max_iter; ++timestep) {
-		
+		iterIn = inputNeurons.begin();
+		iter = neurons.begin();
+		iterOut = outputNeurons.begin();
+
 		(*iterIn)->forward(inputs[0]);
 		for(int i = 0; i < ilen-1; ++i) {
 			++iterIn;
 			(*iterIn)->forward(inputs[i+1]);
 		}
+
 		
 		(*iter)->forward();
 		for(int i = 0; i < nlen-1; ++i) {
@@ -47,7 +51,8 @@ bool Graph::run(double inputs[], std::list<std::vector<double>> &outputMatrix) {
 }
 
 // Adds a Neuron into Graph
-void Graph::add(int x, int y, bool input, bool output) {
+int Graph::add(int x, int y, bool input, bool output) {
+	int i = index;
 	Neuron *n = new Neuron(x, y, index, input, output);
 	neuronPtr.push_back(n);
 	if(input) {
@@ -58,6 +63,7 @@ void Graph::add(int x, int y, bool input, bool output) {
 		neurons.push_back(n);
 	}
 	++index;
+	return i;
 }
 
 // Links two Neuron signal transmission

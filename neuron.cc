@@ -22,45 +22,45 @@ Neuron::Neuron(int x, int y, int i, bool input, bool output) {
 // Prints full neuron details
 void Neuron::print() {
 	std::cout << "------------------------";
-	std::cout << endl;
+	std::cout << std::endl;
 
 	std::cout << "Neuron ";
 	std::cout << index;
-	std::cout << ":" << endl;
+	std::cout << ":" << std::endl;
 
 	std::cout << "\tThreshold    : ";
-	std::cout << thres << endl;
+	std::cout << thres << std::endl;
 	std::cout << "\tposition X   : ";
-	std::cout << posX << endl;
+	std::cout << posX << std::endl;
 	std::cout << "\tposition Y   : ";
-	std::cout << posY << endl;
+	std::cout << posY << std::endl;
 	std::cout << "\tinputNeuron? : ";
-	std::cout << inputNeuron << endl;
+	std::cout << inputNeuron << std::endl;
 	std::cout << "\toutputNeuron?: ";
-	std::cout << outputNeuron << endl;
+	std::cout << outputNeuron << std::endl;
 
-	std::cout << "\tWeights:" << endl;
+	std::cout << "\tWeights:" << std::endl;
 	int len = weights.size();
 	std::list<double>::iterator iter = weights.begin();
 	for(int i = 0; i < len; ++i) {
 		std::cout << "\t* ";
 		std::cout << i;
 		std::cout << ": ";
-		std::cout << (*iter) << endl;
+		std::cout << (*iter) << std::endl;
 		++iter;
 	}
 
 	std::cout << "\tBias: ";
-	std::cout << bias << endl;
+	std::cout << bias << std::endl;
 
-	std::cout << "\tConnections:" << endl;
+	std::cout << "\tConnections:" << std::endl;
 	std::list<Neuron *>::iterator iter_con = connections.begin();
 	for(int i = 0; i < len; ++i) {
 		std::cout << "\t* ";
 		std::cout << i;
 		std::cout << ": Neuron ";
-		std::cout << (*iter_con)->index << endl;
-		++iter;
+		std::cout << (*iter_con)->index << std::endl;
+		++iter_con;
 	}
 }
 
@@ -81,18 +81,19 @@ double Neuron::forward(double input) {
 		int len = weights.size();
 
 		std::list<Neuron *>::iterator iter = connections.begin();
-		
 		if(inputNeuron) {
-			for(int i = 0; i < len; ++i) {
-				(*iter)->thres += input;
+			(*iter)->thres += input;
+			for(int i = 0; i < len - 1; ++i) {
 				++iter;
+				(*iter)->thres += input;
 			}
 		} else {
 			std::list<double>::iterator iterWeight = weights.begin();
-			for(int i = 0; i < len; ++i) {
-				(*iter)->thres += a * (*iterWeight);
+			(*iter)->thres += a * (*iterWeight);
+			for(int i = 0; i < len - 1; ++i) {
 				++iter;
 				++iterWeight;
+				(*iter)->thres += a * (*iterWeight);
 			}
 		}
 		return a;
@@ -100,6 +101,7 @@ double Neuron::forward(double input) {
 }
 
 // Adjusts the parameters of the neuron using gradient descent
+// CURRENTLY NOT USABLE
 void Neuron::backward(double error, double activation, double alpha) {
 	if(inputNeuron) {
 		return;
@@ -111,6 +113,6 @@ void Neuron::backward(double error, double activation, double alpha) {
 			std::advance(iter, 1);
 		}
 		bias -= alpha * error;
-		std::cout << "Parameters updated" << endl;
+		std::cout << "Parameters updated" << std::endl;
 	}
 }
